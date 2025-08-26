@@ -1,32 +1,33 @@
 import cv2 as cv
 import random
 
-path = input("Enter the Image Path: ")
 
-image = cv.imread(path)
 
 # Phase 1
-# print("Enter your choice: ")
+# Image basic processing
 def image_processing_basic(image, path):
     gray = None
     while True:
-        op = input("\n\n1: Display Raw Image\n2: Grayscale Image Conversion\n3: Display Grayscale Image\n4: Save Raw Image\n5: Save Grayscale Image\nEnter your choice: ")
+        op = input("\n\n1: Display Raw Image\n2: Grayscale Image Conversion\n3: Display Grayscale Image\n4: Save Raw Image\n5: Save Grayscale Image\n6: Exit to previous menu\nEnter your choice: ")
         if image is not None:
             if op == '1':
-                cv.imshow("Raw Image", image)
-                cv.waitKey(0)
-                cv.destroyAllWindows()
+                display("Raw Image", image)
+                # cv.imshow("Raw, Image", image)
+                # cv.waitKey(0)
+                # cv.destroyAllWindows()
             elif op == '2':
                 gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-                cv.imshow("Grayscale Image Conversion Successful", gray)
-                cv.waitKey(0)
-                cv.destroyAllWindows()
+                display("Grayscale Image Conversion Succeessful")
+                # cv.imshow("Grayscale Image Conversion Successful", gray)
+                # cv.waitKey(0)
+                # cv.destroyAllWindows()
             elif op == '3':
                 if gray is None:
                     gray = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-                cv.imshow("Grayscale Image", gray)
-                cv.waitKey(0)
-                cv.destroyAllWindows()
+                display("Grayscale Image", image)
+                # cv.imshow("Grayscale Image", gray)
+                # cv.waitKey(0)
+                # cv.destroyAllWindows()
             elif op == '4':
                 title = input("Enter Name: ")
                 cv.imwrite(F"{title}.png", image)
@@ -42,22 +43,28 @@ def image_processing_basic(image, path):
                 print("Wrong choice\nTry again!\n**************************\n")
         else:
             print("File could not be opened!")
-
+# ***********************************************************************************************************************************
 # Phase 2
+# Image transformation
 def image_processing_advanced(image, path):
     while True:
         print("\n***Image Flipping and Cropping***\n")
-        op = input("1: Flip Menu\n2: Crop Menu\n3: Back to previous Menu\nEnter Your choice: ")
+        op = input("1: Flip Menu\n2: Crop Menu\n3: Rotate Image\n4: Resize Menu\n5: Back to previous Menu\nEnter Your choice: ")
         if op == '1':
             flip(image)
         elif op == '2':
             cropped(image)
         elif op == '3':
-            print("Exiting System")
+            rotate(image)
+        elif op == '4':
+            resized_function(image)
+        elif op == '5':
+            print("Exitig system")
             return
         else:
             print("Wrong Choice\nTry Again!")
 # Helper function for advanced Image processing
+    # Flip image
 def flip(image):
     while True:
         op = input("Flip Menu:\n1: Flip Horizontally\n2: Flip Vertically\n3: Flip Both ways\n4: Exit to previous menu\nEnter choice: ")
@@ -82,6 +89,7 @@ def flip(image):
         else:
             print("Wrong Choice\nTry Again!")
 
+    # crop image
 def cropped(image):
     h, w, _= image.shape
     mid_h = h//2
@@ -90,7 +98,7 @@ def cropped(image):
         op = input("Crop Menu\n1: Crop top left\n2: Crop top right\n3: Crop bottom left\n4: Crop bottom right\n5: Enter custom dimensions\n6: Exit to previous menu\nEnter your choice: ")
         if op == '1':
             crop = image[0:mid_h, 0:mid_w]
-            crop = cv.resizeWindow(crop, mid_h, mid_w)
+            # crop = cv.resizeWindow(crop, mid_h, mid_w)
             display("Top-left", crop)
         elif op == '2':
             crop = image[0:mid_h, mid_w: w]
@@ -114,7 +122,7 @@ def cropped(image):
         else:
             print("Wrong Choice\nTry again!")
 
-
+    # helper function to practice DRY
 def display(title,image):
     if image is not None:
         cv.imshow(title, image)
@@ -122,14 +130,57 @@ def display(title,image):
         cv.destroyAllWindows()
     else:
         print("Image could not be opened")
-    return
+        return
+
+
+    # Rotate
+def rotate(image):
+    h, w, _ = image.shape
+    center = (w//2, h//2)
+    angle = int(input("Enter the rotation angle: "))
+    scale = float(input("Enter the scale while rotation: "))
+    size_change = input("Do you want to interchange the dimensions(y/n): ")
+    Matrix = cv.getRotationMatrix2D(center, angle, scale)
+    if size_change.lower() == 'y':
+        # Matrix = cv.getRotationMatrix2D(center, angle, scale)
+        rotated_image = cv.warpAffine(image, Matrix, (w,h))
+        display("Rotated Image with original dimensions", rotated_image)
+    else:
+        rotated_image = cv.warpAffine(image, Matrix, (h,w))
+        display("Rotated Image with interchanged dimensions",rotated_image)
+
+def resized_function(image):
+    while True:
+        op = input("1: Window Resize\n2: Image resize\n3: Back to previous menu\nEnter your choice: ")
+        if op == '1':
+            w = int(input("Enter Width: "))
+            h = int(input("Enter Height: "))
+            cv.namedWindow("Resized Window", cv.WINDOW_NORMAL)
+            cv.resizeWindow("Resized Window",w, h )
+            display("Resized Window", image)
+        elif op == '2':
+            w = int(input("Enter Width: "))
+            h = int(input("Enter Height: "))
+            resized_image = cv.resize(image, (w,h))
+            display("Resized Image", resized_image)
+        elif op == '3':
+            print("Returning to previous menu")
+            return
+        else:
+            print("Wrong Input\nTry Again.")
+
+# ***********************************************************************************************************************************
+# Phase 3
 
 
 
-
-
-def main(image, path):
+def main():
     print("\t********\n\tWelcome to Image Processing\n\t********\n")
+    path = input("Enter the Image Path: ")
+    image = cv.imread(path)
+    if image is None:
+        print("Something went wrong")
+        return
     while True:
         op = input("\n1: Simple Image Processing\n2: Advanced Image Processing\n3: Exit System\nEnter your choice: ")
         if op == '1':
@@ -142,6 +193,6 @@ def main(image, path):
         else:
             print("\nWrong Input\nTry Again.\n**************\n")
 
-main(image, path)
+main()
 
 # image_processing_basic(image, path)
