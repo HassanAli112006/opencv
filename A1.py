@@ -97,25 +97,29 @@ def cropped(image):
     while True:
         op = input("Crop Menu\n1: Crop top left\n2: Crop top right\n3: Crop bottom left\n4: Crop bottom right\n5: Enter custom dimensions\n6: Exit to previous menu\nEnter your choice: ")
         if op == '1':
-            crop = image[0:mid_h, 0:mid_w]
+            new_image = image[0:mid_h, 0:mid_w]
             # crop = cv.resizeWindow(crop, mid_h, mid_w)
-            display("Top-left", crop)
+            resize_window_only(new_image, mid_w - 0 ,mid_h - 0 )
         elif op == '2':
-            crop = image[0:mid_h, mid_w: w]
-            display("Top-right", crop)
+            new_image = image[0:mid_h, mid_w: w]
+            resize_window_only(new_image, mid_w - w, mid_h - 0)
+            # display("Top-right", crop)
         elif op == '3':
-            crop = image[mid_h:h, 0:mid_w]
-            display("Bottom-left", crop)
+            new_image = image[mid_h:h, 0:mid_w]
+            resize_window_only(new_image, mid_w - 0, h - mid_h)
+            # display("Bottom-left", crop)
         elif op == '4':
-            crop = image[mid_h: h, mid_w:w]
-            display("Bottom-right", crop)
+            new_image = image[mid_h: h, mid_w:w]
+            resize_window_only(new_image, w - mid_w, h - mid_h)
+            # display("Bottom-right", crop)
         elif op == '5':
-            start_h = int(input("Enter starting point: "))
-            end_h = int(input("Enter ending point: "))
+            start_h = int(input("Enter starting height: "))
+            end_h = int(input("Enter ending height: "))
             start_w = int(input("Enter starting width: "))
             end_w = int(input("Enter ending width: "))
-            crop = image[start_h:end_h, start_w: end_w]
-            display("Custom-crop", crop)
+            new_image = image[start_h:end_h, start_w: end_w]
+            resize_window_only(new_image, end_w - start_w, end_h - start_h)
+            # display("Custom-crop", crop)
         elif op == '6':
             print("Exiting to previous menu")
             return
@@ -131,6 +135,13 @@ def display(title,image):
     else:
         print("Image could not be opened")
         return
+
+
+def resize_window_only(image, w, h):
+    cv.namedWindow("Cropped Window", cv.WINDOW_NORMAL)
+    cv.resizeWindow("Cropped Window",w, h )
+    display("Cropped Window", image)
+
 
 
     # Rotate
@@ -174,25 +185,33 @@ def resized_function(image):
 
 
 
+
+
+
+# ***********************************************************************************************************************************
+
+
 def main():
     print("\t********\n\tWelcome to Image Processing\n\t********\n")
-    path = input("Enter the Image Path: ")
-    image = cv.imread(path)
-    if image is None:
-        print("Something went wrong")
-        return
     while True:
-        op = input("\n1: Simple Image Processing\n2: Advanced Image Processing\n3: Exit System\nEnter your choice: ")
-        if op == '1':
-            image_processing_basic(image, path)
-        elif op == '2':
-            image_processing_advanced(image, path)
-        elif op == '3':
-            print("\n*********\nThanks for using our program\n")
-            return
-        else:
-            print("\nWrong Input\nTry Again.\n**************\n")
+        path = input("Enter the Image Path: ")
+        image = cv.imread(path)
+        if image is None:
+            print("Something went wrong")
+            continue
+        while True:
+            op = input("\n1: Simple Image Processing\n2: Advanced Image Processing\n3: Exit System\nEnter your choice: ")
+            if op == '1':
+                image_processing_basic(image, path)
+            elif op == '2':
+                image_processing_advanced(image, path)
+            elif op == '3':
+                print("\n*********\nThanks for using our program\n")
+                return
+            else:
+                print("\nWrong Input\nTry Again.\n**************\n")
 
 main()
 
 # image_processing_basic(image, path)
+# E:\f21 pro\IMG_20220721_124444.jpg
