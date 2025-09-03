@@ -2,7 +2,7 @@ import cv2 as cv
 import random
 
 
-
+# ******************************  start  **************************************************************
 # Phase 1
 # Image basic processing
 def image_processing_basic(image, path):
@@ -43,7 +43,12 @@ def image_processing_basic(image, path):
                 print("Wrong choice\nTry again!\n**************************\n")
         else:
             print("File could not be opened!")
-# ***********************************************************************************************************************************
+
+# ******************************  end  **************************************************************
+
+
+
+# *****************************************************  start  ************************************************************************
 # Phase 2
 # Image transformation
 def image_processing_advanced(image, path):
@@ -63,7 +68,7 @@ def image_processing_advanced(image, path):
             return
         else:
             print("Wrong Choice\nTry Again!")
-# Helper function for advanced Image processing
+# sub functions
     # Flip image
 def flip(image):
     while True:
@@ -126,6 +131,11 @@ def cropped(image):
         else:
             print("Wrong Choice\nTry again!")
 
+# ******************************  end  **************************************************************
+
+
+
+# ******************************************  start  ********************************************************
     # helper function to practice DRY
 def display(title,image):
     if image is not None:
@@ -133,16 +143,22 @@ def display(title,image):
         cv.waitKey(0)
         cv.destroyAllWindows()
     else:
-        print("Image could not be opened")
+        print("Something went wrong")
         return
 
 
 def resize_window_only(image, w, h):
     cv.namedWindow("Cropped Window", cv.WINDOW_NORMAL)
     cv.resizeWindow("Cropped Window",w, h )
-    display("Cropped Window", image)
+    if image is not None:
+        cv.imshow("Cropped Window", image)
+        cv.waitKey(0)
+        cv.destroyAllWindows()
+    else:
+        print("Something went wrong")
+        return
 
-
+# *******************************************  end  *********************************************************
 
     # Rotate
 def rotate(image):
@@ -180,15 +196,94 @@ def resized_function(image):
         else:
             print("Wrong Input\nTry Again.")
 
-# ***********************************************************************************************************************************
-# Phase 3
+# *******************************************************************  Start  ******************************************************
+# Phase 3 -- Image Drawing
+
+def image_drawing(image, path):
+    while True:
+        op = input("1: Draw Line\n2: Draw Rectangle\n3: Back to previous menu\nEnter your choice: ")
+        if op == '1':
+            draw_line(image)
+        elif op == '2':
+            draw_rectangle(image)
+        elif op == '3':
+            print("Returning to previous menu")
+            return
+        else:
+            print("Wrong Input\nTry Again.")
+    # pass
+
+# Sub functions
+def draw_line(image):
+    while True:
+        op = input("1: Dissect Image Height\n2: Dissect Image Width\n3: Custom line drawing\n4: Return to previous menu\nEnter your choice: ")
+        if op == '1': # Height dissection
+            thickness = int(input("Enter thickness of disection line: "))
+            color = input("Enter the color of line(IN BGR FORMAT): ")
+            color = tuple(map(int,color.strip("()").split(",")))
+            h, w , _ = image.shape
+            new_image = image.copy()
+            cv.line(new_image, (w//2, 0), (w//2, h), color, thickness)
+            # display("Height Disected Image", image)
+            resize_window_only(new_image, 500, 500)
+
+
+        elif op == '2': # Width dissection
+            thickness = int(input("Enter thickness of disection line: "))
+            color = input("Enter the color of line(IN BGR FORMAT): ")
+            color = tuple(map(int,color.strip("()").split(",")))
+            h, w , _ = image.shape
+            new_image = image.copy()
+            cv.line(new_image, (0, h//2), (w, h//2), color, thickness)
+            resize_window_only(new_image, 600, 600)
+
+
+        elif op == '3': # Custom line
+            start_point = tuple(map(int,input("Enter a starting point(x,y): ").strip("()").split(",")))
+            end_point = tuple(map(int,input("Enter a starting point(x,y): ").strip("()").split(",")))
+            thickness = int(input("Enter thickness of disection line: "))
+            color = tuple(map(int,input("Enter the color of line(IN BGR FORMAT): ").strip("()").split(",")))
+            color = tuple(map(int,color.strip("()").split(",")))
+            h, w , _ = image.shape
+            new_image = image.copy()
+            cv.line(new_image, start_point, end_point, color, thickness)
+            resize_window_only(new_image, 600, 600)
+
+        elif op == '4':
+            print("Returning to previous menu")
+            return
+        else:
+            print("Wrong choice\nTry again.")
+
+def draw_rectangle(image):
+    while True:
+        start_point = tuple(map(int, input("Enter top-left point(x,y): ").strip("()").split(",")))
+        end_point = tuple(map(int,input("Enter bottom-right point(x,y): ").strip("()").split(",")))
+        color = tuple(map(int,input("Enter the color in BGR: ").strip("()").split(",")))
+        filled_or_not = input("Do you want a filled rectangle? (y/n): ")
+        if filled_or_not.lower() == 'y':
+            new_image = image.copy()
+            cv.rectangle(new_image, start_point, end_point, color, -1)
+            resize_window_only(new_image, 500,500)
+            # display("Filled Rectangle", new_image)
+        elif filled_or_not.lower() == 'n':
+            thickness = int(input("Enter thickness of border: "))
+            new_image = image.copy()
+            cv.rectangle(new_image, start_point, end_point, color, thickness)
+            display("Hollow Rectangle", new_image)
+            resize_window_only(new_image, 500,500 )
+        else:
+            print("Wrong input\nTry again.")
+            continue
+        op = input("Do you want to try again? (y/n)")
+        if op.lower() == 'n':
+            return
 
 
 
 
 
-
-# ***********************************************************************************************************************************
+# *********************************************************************** END  ************************************************
 
 
 def main():
@@ -200,12 +295,14 @@ def main():
             print("Something went wrong")
             continue
         while True:
-            op = input("\n1: Simple Image Processing\n2: Advanced Image Processing\n3: Exit System\nEnter your choice: ")
+            op = input("\n1: Simple Image Processing\n2: Advanced Image Processing\n3: Image Drawing\n4: Exit system\nEnter your choice: ")
             if op == '1':
                 image_processing_basic(image, path)
             elif op == '2':
                 image_processing_advanced(image, path)
             elif op == '3':
+                image_drawing(image, path)
+            elif op == '4':
                 print("\n*********\nThanks for using our program\n")
                 return
             else:
