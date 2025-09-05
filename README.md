@@ -1,7 +1,7 @@
 # OpenCV Projects
 
 A collection of my OpenCV (Open Source Computer Vision Library) practice projects and experiments.  
-This repo documents my journey into image processing and computer vision using Python and OpenCV.
+This repository documents my journey into image processing and computer vision using Python and OpenCV.
 
 ## Features
 - Load and display images
@@ -15,7 +15,7 @@ This repo documents my journey into image processing and computer vision using P
 - Face detection with Haar cascades
 
 ## Project Structure
-opencv-projects/
+opencv/
 │
 ├── basic_processing.py      # Basic operations (read, grayscale, resize, rotate)
 ├── edge_detection.py        # Canny & Sobel edge detection
@@ -34,14 +34,14 @@ opencv-projects/
 - Git + GitHub
 
 ## How to Run
-# Clone the repo and navigate into it
-git clone https://github.com/your-username/opencv-projects.git
-cd opencv-projects
+Clone the repo and navigate into it:
+git clone https://github.com/HassanAli112006/opencv.git
+cd opencv
 
-# Install dependencies
+Install dependencies:
 pip install opencv-python
 
-# Run a script (example)
+Run a script (example):
 python basic_processing.py
 
 ## Demo Examples
@@ -56,8 +56,8 @@ python basic_processing.py
 - Integration with AI/ML models  
 
 ## Contact
-- GitHub: [HassanAli112006](https://github.com/HassanAli112006)  
-- LinkedIn: [Hassan Ali](https://www.linkedin.com/in/hassan-ali-5a68a724b/)
+- GitHub: https://github.com/HassanAli112006  
+- LinkedIn: https://www.linkedin.com/in/hassan-ali-5a68a724b/
 
 ## License
 This project is open-source and available under the MIT License.
