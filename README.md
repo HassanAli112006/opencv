@@ -14,19 +14,6 @@ This repository documents my journey into image processing and computer vision u
 - Contour detection
 - Face detection with Haar cascades
 
-## Project Structure
-opencv/
-│
-├── basic_processing.py      # Basic operations (read, grayscale, resize, rotate)
-├── edge_detection.py        # Canny & Sobel edge detection
-├── thresholding.py          # Thresholding examples
-├── contours.py              # Contour detection
-├── face_detection.py        # Haar cascade face detection
-│
-├── images/                  # Sample images
-│
-├── .gitignore
-├── README.md
 
 ## Tech Stack
 - Python 3.8+
